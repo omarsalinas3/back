@@ -385,6 +385,45 @@ app.get('/api/historial-medico/:idPaciente', async (req, res) => {
         res.status(500).json({ error: 'Error interno del servidor' });
     }
 });
+// Modificar historial médico
+app.put('/api/historial-medico/:idRegistro', async (req, res) => {
+    try {
+        const idRegistro = req.params.idRegistro;
+        const { diagnostico, tratamiento, observaciones } = req.body;
+        console.log('Actualizando registro con ID:', idRegistro);
+        const [result] = await pool.execute(`
+      UPDATE historial_medico 
+      SET diagnostico = ?, tratamiento = ?, observaciones = ? 
+      WHERE id = ?`, [diagnostico, tratamiento, observaciones, idRegistro]);
+        // Verificar si se actualizó algún registro
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ message: 'No se encontró el registro para actualizar' });
+        }
+        res.json({ message: 'Registro actualizado correctamente' });
+    }
+    catch (error) {
+        console.error('Error al actualizar el historial médico:', error);
+        res.status(500).json({ error: 'Error interno del servidor' });
+    }
+});
+// Eliminar registro del historial médico
+app.delete('/api/historial-medico/:idRegistro', async (req, res) => {
+    try {
+        const idRegistro = req.params.idRegistro;
+        console.log('Eliminando registro con ID:', idRegistro);
+        const [result] = await pool.execute(`
+      DELETE FROM historial_medico WHERE id = ?`, [idRegistro]);
+        // Verificar si se eliminó algún registro
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ message: 'No se encontró el registro para eliminar' });
+        }
+        res.json({ message: 'Registro eliminado correctamente' });
+    }
+    catch (error) {
+        console.error('Error al eliminar el historial médico:', error);
+        res.status(500).json({ error: 'Error interno del servidor' });
+    }
+});
 // Ruta para procesar y guardar el pago
 app.post('/api/registrar-pagos', async (req, res) => {
     try {

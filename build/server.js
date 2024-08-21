@@ -321,7 +321,6 @@ app.put('/api/citas/:idCita/cancelar', async (req, res) => {
         res.status(500).json({ error: 'Error interno del servidor' });
     }
 });
-// Finalizar cita y agregar historial médico
 app.post('/api/citas/:idCita/finalizar', async (req, res) => {
     try {
         const idCita = req.params.idCita;
@@ -349,14 +348,13 @@ app.post('/api/citas/:idCita/finalizar', async (req, res) => {
             cita.edad || null,
             cita.tipoSangre || null
         ]);
-        res.json({ message: 'Cita finalizada y historial médico registrado' });
+        return res.json({ message: 'Cita finalizada y historial médico registrado' });
     }
     catch (error) {
         console.error('Error al finalizar la cita:', error);
-        res.status(500).json({ error: 'Error interno del servidor' });
+        return res.status(500).json({ error: 'Error interno del servidor' });
     }
 });
-// Obtener historial médico de un paciente
 app.get('/api/historial-medico/:idPaciente', async (req, res) => {
     try {
         const idPaciente = req.params.idPaciente;
@@ -378,14 +376,13 @@ app.get('/api/historial-medico/:idPaciente', async (req, res) => {
         if (Array.isArray(rows) && rows.length === 0) {
             return res.status(404).json({ message: 'No se encontró historial médico para este paciente' });
         }
-        res.json(rows);
+        return res.json(rows);
     }
     catch (error) {
         console.error('Error al obtener el historial médico:', error);
-        res.status(500).json({ error: 'Error interno del servidor' });
+        return res.status(500).json({ error: 'Error interno del servidor' });
     }
 });
-// Modificar historial médico
 app.put('/api/historial-medico/:idRegistro', async (req, res) => {
     try {
         const idRegistro = req.params.idRegistro;
@@ -399,11 +396,11 @@ app.put('/api/historial-medico/:idRegistro', async (req, res) => {
         if (result.affectedRows === 0) {
             return res.status(404).json({ message: 'No se encontró el registro para actualizar' });
         }
-        res.json({ message: 'Registro actualizado correctamente' });
+        return res.json({ message: 'Registro actualizado correctamente' });
     }
     catch (error) {
         console.error('Error al actualizar el historial médico:', error);
-        res.status(500).json({ error: 'Error interno del servidor' });
+        return res.status(500).json({ error: 'Error interno del servidor' });
     }
 });
 // Eliminar registro del historial médico
@@ -417,11 +414,11 @@ app.delete('/api/historial-medico/:idRegistro', async (req, res) => {
         if (result.affectedRows === 0) {
             return res.status(404).json({ message: 'No se encontró el registro para eliminar' });
         }
-        res.json({ message: 'Registro eliminado correctamente' });
+        return res.json({ message: 'Registro eliminado correctamente' });
     }
     catch (error) {
         console.error('Error al eliminar el historial médico:', error);
-        res.status(500).json({ error: 'Error interno del servidor' });
+        return res.status(500).json({ error: 'Error interno del servidor' });
     }
 });
 // Ruta para procesar y guardar el pago
